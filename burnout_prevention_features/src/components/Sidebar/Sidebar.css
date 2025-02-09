@@ -1,0 +1,153 @@
+
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    border-right: 1px solid #e9ecef;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+  }
+  .app-name {
+    text-align: center;
+    padding:3px;
+    font-size: 10px;
+    font-weight: bold;
+    color: #0650a4; /* Adjust the color to match your theme */
+    border-bottom: 1px solid #ddd; /* Optional border to separate the section */
+  }
+  
+  .profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    color: #095cbb;
+  }
+  
+  /* .logo-icon{
+    width: 60px;
+    height: 60px;
+    
+  } */
+  
+  .profile-icon {
+    width: 40px;
+    height: 60px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    padding-top: 20px;
+  }
+  
+  
+  .profile-icon:hover {
+    transform: scale(1.05);
+  }
+  
+  .profile-details {
+    margin-top: 10px;
+    text-align: center;
+    background-color: #8fbdee;
+    border-radius: 6px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-details h3 {
+    margin: 0 0 5px 0;
+    font-size: 1rem;
+  }
+  
+  .profile-details p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #6c757d;
+  }
+
+  
+  .logout-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5px;
+    padding: 5px 5px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 3px;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .logout-button p{
+    font-size: 0.6rem;
+  }
+  
+  
+  .logout-button:hover {
+    background-color: #e9ecef;
+  }
+  
+  .logout-button svg {
+    margin-right: 5px;
+  }
+  
+  nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .menu-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    color: #495057;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+  
+  .menu-item:hover,
+  .menu-item.active {
+    background-color: #e9ecef;
+    color: #212529;
+  }
+  
+  .menu-item svg {
+    margin-right: 10px;
+  }
+  
+  .submenu-icon {
+    margin-left: auto;
+    transition: transform 0.2s ease;
+  }
+  
+  .submenu-icon.rotated {
+    transform: rotate(180deg);
+  }
+  
+  .submenu {
+    margin-left: 30px;
+    display: none;
+  }
+  
+  .submenu.active {
+    display: block;
+  }
+  
+  .submenu li a {
+    display: block;
+    padding: 8px 10px;
+    color: #6c757d;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+  }
+  
+  .submenu li a:hover {
+    background-color: #e9ecef;
+    color: #212529;
+  }
+  
+  
+  
