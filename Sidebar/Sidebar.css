@@ -1,13 +1,20 @@
 
-   .sidebar {
+.sidebar {
     width: 250px;
     height: 100vh;
-    background-color: #f8f9fa;
     border-right: 1px solid #e9ecef;
     padding: 20px;
     display: flex;
     flex-direction: column;
     transition: all 0.3s ease;
+  }
+  .app-name {
+    text-align: center;
+    padding:3px;
+    font-size: 10px;
+    font-weight: bold;
+    color: #0650a4; /* Adjust the color to match your theme */
+    border-bottom: 1px solid #ddd; /* Optional border to separate the section */
   }
   
   .profile-container {
@@ -15,15 +22,23 @@
     flex-direction: column;
     align-items: center;
     margin-bottom: 20px;
+    color: #095cbb;
   }
   
-  .profile-icon {
+  /* .logo-icon{
     width: 60px;
     height: 60px;
-    border-radius: 50%;
+    
+  } */
+  
+  .profile-icon {
+    width: 40px;
+    height: 60px;
     cursor: pointer;
     transition: transform 0.2s ease;
+    padding-top: 20px;
   }
+  
   
   .profile-icon:hover {
     transform: scale(1.05);
@@ -48,6 +63,7 @@
     font-size: 0.8rem;
     color: #6c757d;
   }
+
   
   .logout-button {
     display: flex;
@@ -132,5 +148,6 @@
     background-color: #e9ecef;
     color: #212529;
   }
+  
   
   

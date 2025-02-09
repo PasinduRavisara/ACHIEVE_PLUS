@@ -1,6 +1,8 @@
+
 import { useState } from "react"
 import { Home, CheckSquare, BarChart2, Award, Users, Heart, Settings, ChevronDown, LogOut } from "lucide-react"
 import "./Sidebar.css"
+
 
 const menuItems = [
   { icon: Home, label: "Dashboard", link: "/" },
@@ -24,13 +26,13 @@ const menuItems = [
 ]
 
 function Sidebar() {
-  const [isProfileOpen, setIsProfileOpen] = useState(false)
-  const [activeItem, setActiveItem] = useState("Dashboard")
-  const [expandedItem, setExpandedItem] = useState(null) // Corrected line
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [activeItem, setActiveItem] = useState("Dashboard");
+  const [expandedItem, setExpandedItem] = useState(null); // Corrected line
 
   const handleProfileClick = () => {
-    setIsProfileOpen(!isProfileOpen)
-  }
+    setIsProfileOpen(!isProfileOpen);
+  };
 
   const handleItemClick = (label) => {
     setActiveItem(label);
@@ -41,17 +43,24 @@ function Sidebar() {
       setExpandedItem(null);
     }
   };
-  
 
   return (
     <aside className="sidebar">
+      {/* App Name */}
+      <header className="app-name">
+        <h4>ACHIEVE+</h4>
+        {/* <img src="./img/achieve+.png" alt="logo" className="logo-icon" /> */}
+      </header>
+
+      {/* Profile Section */}
       <div className="profile-container">
         <img
-          src="https://via.placeholder.com/150"
+          src="./img/profile4.png"
           alt="Profile"
           className="profile-icon"
           onClick={handleProfileClick}
         />
+        <h6>Profile</h6>
         {isProfileOpen && (
           <div className="profile-details">
             <h3>John Doe</h3>
@@ -64,6 +73,8 @@ function Sidebar() {
           </div>
         )}
       </div>
+       
+      {/* Navigation */}
       <nav>
         <ul>
           {menuItems.map((item) => (
@@ -93,7 +104,7 @@ function Sidebar() {
         </ul>
       </nav>
     </aside>
-  )
+  );
 }
 
-export default Sidebar
+export default Sidebar;
