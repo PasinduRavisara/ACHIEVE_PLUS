@@ -1,0 +1,93 @@
+.mainHomeRightbar{
+    flex: 4;
+    background-color:rgb(213, 222, 240) ;
+    height: 100vh;
+}
+
+.ItemContainer{
+    display: flex;
+    margin: auto;
+    justify-content: center;
+}
+
+.ItemContainer1{
+    background-color: rgb(252, 252, 252);
+    width: 390px;
+    height: 20vh;
+    margin-left: 10px;
+    margin-top: 10px;
+    border-radius: 10px;
+    display: flex;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.taskProgress{
+    text-align: start;
+    margin-left: 10px;
+    margin-top: 30px;
+    color: black;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.taskCounter{
+    text-align: start;
+    font-size: 40px;
+    font-weight: 600;
+    margin-left: 10px;
+    margin-top: -10px;
+    color: rgb(104, 165, 142);
+}
+
+.taskCounter1{
+    text-align: start;
+    font-size: 40px;
+    font-weight: 600;
+    margin-left: 10px;
+    margin-top: -10px;
+    color: rgb(165, 106, 104);
+}
+
+.taskCounter2{
+    text-align: start;
+    font-size: 40px;
+    font-weight: 600;
+    margin-left: 10px;
+    margin-top: -10px;
+    color: rgb(176,224,230);
+}
+
+.currentMonth1{
+    text-align: start;
+    margin-left: 10px;
+    margin-top: -40px;
+    color: black;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.barchartContainer{
+    margin-left: 90px;
+    margin-top: 40px;
+}
+
+.subitemContainer{
+    margin-top: 30px;
+}
+
+.subitemContainer1{
+    margin-top: 13px;
+}
+
+.MiddleTaskChart{
+    width: 79%;
+    background-color: white;
+    margin: auto;
+    justify-content: center;
+}
+
+.TaskCreatedvsCompleted{
+    font-weight: 600;
+    font-size: 16px;
+    padding: 10px;
+}
