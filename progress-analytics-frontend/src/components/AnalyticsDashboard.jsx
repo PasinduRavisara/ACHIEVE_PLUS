@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Card, Row, Col, Form, Spinner, Alert } from "react-bootstrap";
+import { Container, Card, Row, Col, Form, Spinner, Alert, Image } from "react-bootstrap";
 import TasksChart from "./TasksChart";
+import pointsImage from "../assets/points_image.jpg"; // Import your image
 
 const AnalyticsDashboard = () => {
   const [metrics, setMetrics] = useState({
@@ -17,13 +18,12 @@ const AnalyticsDashboard = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch metrics function
   const fetchMetrics = useCallback(async (range) => {
     try {
       setLoading(true);
       const response = await fetch(`http://localhost:8080/api/analytics/metrics?dateRange=${range}`);
       if (!response.ok) throw new Error("Failed to fetch metrics");
-      
+
       const data = await response.json();
       setMetrics(data);
     } catch (err) {
@@ -43,7 +43,7 @@ const AnalyticsDashboard = () => {
   if (error) return <Alert variant="danger">Error: {error}</Alert>;
 
   return (
-    <div>
+    <Container>
       <Form.Group className="mb-3">
         <Form.Label>Select Date Range:</Form.Label>
         <Form.Select value={dateRange} onChange={handleDateRangeChange}>
@@ -53,9 +53,9 @@ const AnalyticsDashboard = () => {
         </Form.Select>
       </Form.Group>
 
-      <Row className="mb-4">
+      <Row className="mb-4 g-4">
         <Col md={4}>
-          <Card>
+          <Card className="h-100 d-flex flex-column">
             <Card.Body>
               <Card.Title>✅ Tasks Completed</Card.Title>
               <Card.Text>
@@ -67,7 +67,7 @@ const AnalyticsDashboard = () => {
           </Card>
         </Col>
         <Col md={4}>
-          <Card>
+          <Card className="h-100 d-flex flex-column">
             <Card.Body>
               <Card.Title>📌 Tasks in Progress</Card.Title>
               <Card.Text>
@@ -77,7 +77,7 @@ const AnalyticsDashboard = () => {
           </Card>
         </Col>
         <Col md={4}>
-          <Card>
+          <Card className="h-100 d-flex flex-column">
             <Card.Body>
               <Card.Title>📊 Completion Rate</Card.Title>
               <Card.Text>
@@ -88,9 +88,17 @@ const AnalyticsDashboard = () => {
         </Col>
       </Row>
 
-      <Row className="mb-4">
+      <Row className="mb-4 g-4">
         <Col md={6}>
-          <Card>
+          <Card className="h-100 d-flex flex-column">
+            <Card.Body>
+              <Card.Title>📈 Tasks Completed vs. In Progress</Card.Title>
+              <TasksChart dateRange={dateRange} />
+            </Card.Body>
+          </Card>
+        </Col>
+        <Col md={6}>
+          <Card className="h-100 d-flex flex-column">
             <Card.Body>
               <Card.Title>🏆 Points Earned</Card.Title>
               <Card.Text>
@@ -99,18 +107,19 @@ const AnalyticsDashboard = () => {
                 Total: <strong>{metrics.pointsEarnedTotal}</strong>
               </Card.Text>
             </Card.Body>
-          </Card>
-        </Col>
-        <Col md={6}>
-          <Card>
-            <Card.Body>
-              <Card.Title>📈 Tasks Completed vs. In Progress</Card.Title>
-              <TasksChart dateRange={dateRange} />
-            </Card.Body>
+            <Card.Footer className="text-center">
+              <Image
+                src={pointsImage}
+                alt="Rewards"
+                fluid
+                className="rounded"
+                style={{ maxHeight: "150px" }}
+              />
+            </Card.Footer>
           </Card>
         </Col>
       </Row>
-    </div>
+    </Container>
   );
 };
 
