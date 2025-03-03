@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Card, Row, Col, Form } from "react-bootstrap"
-import TasksChart from "./TasksChart"
+import { useState, useEffect, useCallback } from "react";
+import { Card, Row, Col, Form, Spinner, Alert } from "react-bootstrap";
+import TasksChart from "./TasksChart";
 
 const AnalyticsDashboard = () => {
   const [metrics, setMetrics] = useState({
@@ -12,23 +12,35 @@ const AnalyticsDashboard = () => {
     completionRate: 0,
     pointsEarnedMonth: 0,
     pointsEarnedTotal: 0,
-  })
-  const [dateRange, setDateRange] = useState("month")
+  });
+  const [dateRange, setDateRange] = useState("month");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Fetch metrics function
+  const fetchMetrics = useCallback(async (range) => {
+    try {
+      setLoading(true);
+      const response = await fetch(`http://localhost:8080/api/analytics/metrics?dateRange=${range}`);
+      if (!response.ok) throw new Error("Failed to fetch metrics");
+      
+      const data = await response.json();
+      setMetrics(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
-    fetchMetrics(dateRange)
-  }, [dateRange])
+    fetchMetrics(dateRange);
+  }, [dateRange, fetchMetrics]);
 
-  // In AnalyticsDashboard.jsx
-const fetchMetrics = async (range) => {
-    const response = await fetch(`http://localhost:8080/api/analytics/metrics?dateRange=${range}`);
-    const data = await response.json();
-    setMetrics(data);
-  };
+  const handleDateRangeChange = (e) => setDateRange(e.target.value);
 
-  const handleDateRangeChange = (e) => {
-    setDateRange(e.target.value)
-  }
+  if (loading) return <Spinner animation="border" className="d-block mx-auto mt-4" />;
+  if (error) return <Alert variant="danger">Error: {error}</Alert>;
 
   return (
     <div>
@@ -40,15 +52,16 @@ const fetchMetrics = async (range) => {
           <option value="year">This Year</option>
         </Form.Select>
       </Form.Group>
+
       <Row className="mb-4">
         <Col md={4}>
           <Card>
             <Card.Body>
-              <Card.Title>Tasks Completed</Card.Title>
+              <Card.Title>✅ Tasks Completed</Card.Title>
               <Card.Text>
-                This {dateRange}: {metrics.totalTasksCompletedMonth}
+                This {dateRange}: <strong>{metrics.totalTasksCompletedMonth}</strong>
                 <br />
-                Overall: {metrics.totalTasksCompletedOverall}
+                Overall: <strong>{metrics.totalTasksCompletedOverall}</strong>
               </Card.Text>
             </Card.Body>
           </Card>
@@ -56,29 +69,34 @@ const fetchMetrics = async (range) => {
         <Col md={4}>
           <Card>
             <Card.Body>
-              <Card.Title>Tasks in Progress</Card.Title>
-              <Card.Text>{metrics.tasksInProgress}</Card.Text>
+              <Card.Title>📌 Tasks in Progress</Card.Title>
+              <Card.Text>
+                {metrics.tasksInProgress > 0 ? `${metrics.tasksInProgress} ongoing` : "No active tasks"}
+              </Card.Text>
             </Card.Body>
           </Card>
         </Col>
         <Col md={4}>
           <Card>
             <Card.Body>
-              <Card.Title>Completion Rate</Card.Title>
-              <Card.Text>{metrics.completionRate.toFixed(2)}%</Card.Text>
+              <Card.Title>📊 Completion Rate</Card.Title>
+              <Card.Text>
+                {metrics.completionRate > 0 ? `${metrics.completionRate.toFixed(2)}%` : "No tasks completed yet"}
+              </Card.Text>
             </Card.Body>
           </Card>
         </Col>
       </Row>
+
       <Row className="mb-4">
         <Col md={6}>
           <Card>
             <Card.Body>
-              <Card.Title>Points Earned</Card.Title>
+              <Card.Title>🏆 Points Earned</Card.Title>
               <Card.Text>
-                This {dateRange}: {metrics.pointsEarnedMonth}
+                This {dateRange}: <strong>{metrics.pointsEarnedMonth}</strong>
                 <br />
-                Total: {metrics.pointsEarnedTotal}
+                Total: <strong>{metrics.pointsEarnedTotal}</strong>
               </Card.Text>
             </Card.Body>
           </Card>
@@ -86,15 +104,14 @@ const fetchMetrics = async (range) => {
         <Col md={6}>
           <Card>
             <Card.Body>
-              <Card.Title>Tasks Completed vs. In Progress</Card.Title>
+              <Card.Title>📈 Tasks Completed vs. In Progress</Card.Title>
               <TasksChart dateRange={dateRange} />
             </Card.Body>
           </Card>
         </Col>
       </Row>
     </div>
-  )
-}
+  );
+};
 
-export default AnalyticsDashboard
-
+export default AnalyticsDashboard;
