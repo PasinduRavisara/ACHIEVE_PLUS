@@ -22,4 +22,22 @@ public class Task {
 
     @Column(name = "completed_at")
     private LocalDateTime completedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User assignedUser;
+
+    // Constructor for creating mock data
+    public Task() {}
+
+    public Task(String title, String description, String status, int points,
+                LocalDateTime createdAt, LocalDateTime completedAt, User assignedUser) {
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.points = points;
+        this.createdAt = createdAt;
+        this.completedAt = completedAt;
+        this.assignedUser = assignedUser;
+    }
 }
