@@ -9,16 +9,16 @@ const RewardStore = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // For demo purposes, we're using a hardcoded user ID
   const userId = 1;
 
   useEffect(() => {
     const loadData = async () => {
       try {
         setLoading(true);
+
         // Load user data
         const userData = await fetchUser(userId);
-        setUser(userData);
+        setUser(userData || { points: 0 });
 
         // Load rewards
         const rewardsData = await fetchRewards();
@@ -30,7 +30,6 @@ const RewardStore = () => {
         setLoading(false);
       }
     };
-
     loadData();
   }, []);
 
@@ -40,7 +39,7 @@ const RewardStore = () => {
 
       // Update user points after claiming
       const userData = await fetchUser(userId);
-      setUser(userData);
+      setUser(userData || { points: 0 });
 
       alert("Reward claimed successfully!");
     } catch (err) {
