@@ -1,0 +1,228 @@
+:root {
+  --primary-color: #1a237e;
+  --secondary-color: #4fc3f7;
+  --accent-color: #ff5722;
+  --background-color: #f5f7fa;
+  --card-background: #ffffff;
+  --text-color: #333333;
+  --sidebar-width: 60px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: var(--background-color);
+}
+
+/* App Layout */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  padding: 20px;
+}
+
+/* Header Styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.header-actions {
+  display: flex;
+  gap: 16px;
+}
+
+.header-icon {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #4fc3f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+}
+
+/* Sidebar Styles */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--sidebar-width);
+  background-color: var(--primary-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  z-index: 10;
+}
+
+.sidebar-logo {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 30px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.nav-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 60px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.nav-item:hover,
+.nav-item.active {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-item svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Reward Store Styles */
+.reward-store {
+  padding: 20px;
+}
+
+.points-card {
+  background-color: #818cf8;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+  color: white;
+  width: 300px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.points-title {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.points-value {
+  background-color: white;
+  color: var(--primary-color);
+  padding: 8px 16px;
+  border-radius: 16px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.rewards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.rewards-illustration {
+  position: absolute;
+  right: 40px;
+  top: 120px;
+  width: 300px;
+  height: auto;
+}
+
+/* Reward Card Styles */
+.reward-card {
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  width: 170px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.reward-image {
+  height: 120px;
+  background-color: var(--secondary-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reward-image img {
+  max-width: 90%;
+  max-height: 90px;
+  object-fit: contain;
+}
+
+.reward-info {
+  padding: 12px;
+  text-align: center;
+}
+
+.reward-name {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.reward-points {
+  font-size: 14px;
+  font-weight: bold;
+  color: var(--primary-color);
+  margin-bottom: 12px;
+}
+
+.claim-button {
+  background-color: #ffc107;
+  color: black;
+  border: none;
+  border-radius: 16px;
+  padding: 6px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.claim-button:hover {
+  background-color: #ffd54f;
+}
+
+.claim-button:disabled {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
+}
