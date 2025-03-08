@@ -1,11 +1,23 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import Home from './Pages/Home/Home';
+import Navbar from './components/Navbar';
+import Dashboard from './components/Dashboard';
+import UserAnalytics from './components/UserAnalytics';
 
 function App() {
   return (
-    <div className="App">
-      <Home/>
-    </div>
+    <Router>
+      <div className="App">
+        <Navbar />
+        <div className="container mt-4">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/user/:userId" element={<UserAnalytics />} />
+          </Routes>
+        </div>
+      </div>
+    </Router>
   );
 }
 
