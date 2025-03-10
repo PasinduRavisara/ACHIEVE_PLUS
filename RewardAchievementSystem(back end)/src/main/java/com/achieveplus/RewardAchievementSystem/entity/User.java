@@ -9,25 +9,25 @@ import java.util.List;
 import lombok.Data;
 
 @Entity
-@Data
+@Data // Lombok's annotation to automatically generate getter, setters, toString, equals, and hashCode methods
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Automatically generates the primary key (ID) for this entity
     private Long id;
     private String username;
-    private int totalPoints;
+    private int totalPoints; // Total points accumulated by the user
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user") // One-to-many relationship with Task entity (user can have multiple tasks)
     private List<Task> tasks;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user") // One-to-many relationship with Reward entity (user can have multiple rewards)
     private List<Reward> rewards;
 
     public void addPoints(int points) {
         if (points < 0) {
             throw new IllegalArgumentException("Points cannot be negative");
         }
-        this.totalPoints += points;
+        this.totalPoints += points; // Adds the points to the totalPoints
     }
 
     public boolean hasEnoughPoints(int requiredPoints) {
@@ -38,10 +38,10 @@ public class User {
         if (points < 0) {
             throw new IllegalArgumentException("Points cannot be negative");
         }
-        if (this.totalPoints >= points) {
+        if (this.totalPoints >= points) { // Check if the user has enough points to deduct
             this.totalPoints -= points;
-            return true;
+            return true; // Successful deduction
         }
-        return false;
+        return false; // Not enough points to deduct
     }
 }

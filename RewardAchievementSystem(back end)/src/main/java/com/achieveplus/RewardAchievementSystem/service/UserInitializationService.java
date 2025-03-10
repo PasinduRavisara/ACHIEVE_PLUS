@@ -12,6 +12,7 @@ public class UserInitializationService {
     private final UserRepository userRepository;
     private final TaskRewardService taskRewardService;
 
+    // Constructor for dependency injection of UserRepository and TaskRewardService
     @Autowired
     public UserInitializationService(
             UserRepository userRepository,
@@ -20,8 +21,15 @@ public class UserInitializationService {
         this.taskRewardService = taskRewardService;
     }
 
+    /**
+     * Initializes a new user with the specified username and a set of tasks and rewards.
+     *
+     * @param username The username of the new user.
+     * @param initialTaskCount The number of tasks to assign to the new user.
+     * @return The created User object after being saved in the repository.
+     */
     public User initializeNewUser(String username, int initialTaskCount) {
-        // Create new user with 0 points
+        // Create a new user object and set the initial values
         User user = new User();
         user.setUsername(username);
         user.setTotalPoints(0);

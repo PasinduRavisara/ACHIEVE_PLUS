@@ -19,6 +19,7 @@ public class TaskRewardService {
     private final RewardRepository rewardRepository;
     private final UserRepository userRepository;
 
+    // Constructor for dependency injection
     @Autowired
     public TaskRewardService(
             TaskRepository taskRepository,
@@ -29,6 +30,14 @@ public class TaskRewardService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Creates a new task with a corresponding reward for the given user.
+     *
+     * @param taskName The name of the task to be created.
+     * @param rewardName The name of the reward to be associated with the task.
+     * @param user The user to whom the task and reward will be assigned.
+     * @return The created Task entity, with the associated Reward saved.
+     */
     public Task createTaskWithReward(String taskName, String rewardName, User user) {
         // Create and save task
         Task task = new Task();
@@ -53,7 +62,13 @@ public class TaskRewardService {
         return taskRepository.save(task);
     }
 
-    // Initialize a user with a set of tasks and corresponding rewards
+    /**
+     * Initializes a user with a specified number of tasks and corresponding rewards.
+     *
+     * @param user The user for whom the tasks and rewards are being created.
+     * @param numberOfTasks The number of tasks (and corresponding rewards) to initialize.
+     * @return A list of Task entities, each with an associated reward.
+     */
     public List<Task> initializeUserTasks(User user, int numberOfTasks) {
         List<Task> tasks = new ArrayList<>();
 
