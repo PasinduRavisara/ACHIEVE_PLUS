@@ -13,21 +13,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/rewards")
+@RestController // Marks the class as a REST controller for handling HTTP requests
+@RequestMapping("/api/rewards") // Defines the base URL path for this controller
 public class RewardController {
-    @Autowired
+    @Autowired // Automatically injects the RewardService
     private RewardService rewardService;
 
+    // Method to claim a reward by the user
     @PostMapping("/claim/{rewardId}")
     public ResponseEntity<RewardDTO> claimReward(
             @PathVariable Long rewardId,
             @AuthenticationPrincipal User user) {
+        // Call the service to claim the reward and return it in the response
         return ResponseEntity.ok(rewardService.claimReward(rewardId, user));
     }
 
+    // Method to get the list of rewards for the authenticated user
     @GetMapping("/points")
     public ResponseEntity<Integer> getUserPoints(@AuthenticationPrincipal User user) {
+        // Call the service to fetch the user's rewards and return them in the response
         return ResponseEntity.ok(user.getTotalPoints());
     }
 

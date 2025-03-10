@@ -15,30 +15,33 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RestController
-@RequestMapping("/api/dashboard")
+@RestController // Marks the class as a REST controller for handling HTTP requests
+@RequestMapping("/api/dashboard") // Defines the base URL path for this controller
 public class DashboardController {
-    @Autowired
+    @Autowired // Automatically injects the RewardService
     private RewardService rewardService;
 
-    @Autowired
+    @Autowired // Automatically injects the TaskService
     private TaskService taskService;
 
+    // Method to fetch dashboard data for a logged-in user
     @GetMapping
     public ResponseEntity<Map<String, Object>> getDashboardData(@AuthenticationPrincipal User user) {
+        // Create a map to hold the dashboard data
         Map<String, Object> dashboardData = new HashMap<>();
 
-        // Get user points
+        // Fetch and add the user's total points to the dashboard data
         dashboardData.put("points", user.getTotalPoints());
 
-        // Get completion rate
+        // Fetch and add the user's task completion rate to the dashboard data
         CompletionRateDTO completionRate = taskService.getCompletionRateDTO(user);
         dashboardData.put("completionRate", completionRate.getCompletionRate());
 
-        // Get rewards
+        // Fetch and add the user's rewards to the dashboard data
         List<RewardDTO> rewards = rewardService.getUserRewards(user);
         dashboardData.put("rewards", rewards);
 
+        // Return the dashboard data as a JSON response
         return ResponseEntity.ok(dashboardData);
     }
 }

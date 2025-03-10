@@ -14,8 +14,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("/api/tasks")
-@Tag(name = "Task Management", description = "APIs for managing user tasks")
+@RequestMapping("/api/tasks") // Base URL path for this controller
+@Tag(name = "Task Management", description = "APIs for managing user tasks") // Swagger metadata
+
 public class TaskController {
     private final TaskService taskService;
 
@@ -24,7 +25,8 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @GetMapping("/completion-rate")
+    // Endpoint to get the task completion rate for the authenticated user
+    @GetMapping("/completion-rate") // Maps to GET /api/tasks/completion-rate
     @Operation(summary = "Get user's task completion rate",
             description = "Calculates the percentage of completed tasks for the authenticated user")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved completion rate")
@@ -33,7 +35,8 @@ public class TaskController {
         return ResponseEntity.ok(new CompletionRateDTO(rate));
     }
 
-    @PostMapping("/{taskId}/complete")
+    // Endpoint to mark a specific task as complete
+    @PostMapping("/{taskId}/complete") // Maps to POST /api/tasks/{taskId}/complete
     @Operation(summary = "Mark task as complete",
             description = "Marks the specified task as completed for the authenticated user")
     @ApiResponse(responseCode = "200", description = "Task successfully completed")
@@ -41,6 +44,6 @@ public class TaskController {
     public ResponseEntity<TaskDTO> completeTask(
             @PathVariable Long taskId,
             @AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(taskService.completeTask(taskId, user));
+        return ResponseEntity.ok(taskService.completeTask(taskId, user)); // Mark task as complete and return the task DTO
     }
 }
