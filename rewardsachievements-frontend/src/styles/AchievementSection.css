@@ -1,0 +1,64 @@
+.achievement-section {
+    flex: 1;
+    background-color: #e6e6e6;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .achievement-section h3 {
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .trophy-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .trophy-icon {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .completion-rate {
+    background-color: #2196f3;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    color: white;
+    text-align: center;
+  }
+  
+  .percentage h1 {
+    font-size: 72px;
+    font-weight: bold;
+  }
+  
+  .percentage p {
+    font-size: 16px;
+  }
+  
+  .time-period {
+    display: flex;
+    justify-content: center;
+    margin-top: auto;
+  }
+  
+  .period-button {
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 25px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .period-button:hover {
+    background-color: #1976d2;
+  }

@@ -1,0 +1,44 @@
+.dashboard-container {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+  }
+  
+  .main-content {
+    flex: 1;
+    padding: 20px 30px;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+  }
+  
+  .header h2 {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .header-actions {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  
+  .theme-toggle, .profile-icon {
+    cursor: pointer;
+  }
+  
+  .dashboard-sections {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  
+  @media (max-width: 768px) {
+    .dashboard-sections {
+      flex-direction: column;
+    }
+  }
