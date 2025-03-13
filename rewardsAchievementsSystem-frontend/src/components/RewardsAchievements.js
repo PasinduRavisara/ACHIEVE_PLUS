@@ -22,12 +22,13 @@ const RewardsAchievements = () => {
         // setRewards(data.rewards);
 
         // For demonstration, using sample data:
-        setPoints(55);
-        setCompletionRate(40);
+        setPoints(0);
+        setCompletionRate(0);
         setRewards([
-          { id: 1, name: "REWARD 01", claimed: false, pointsValue: 20 },
-          { id: 2, name: "REWARD 02", claimed: false, pointsValue: 20 },
-          { id: 3, name: "REWARD 03", claimed: false, pointsValue: 20 },
+          { id: 1, name: "REWARD 01", claimed: false, pointsValue: 25 },
+          { id: 2, name: "REWARD 02", claimed: false, pointsValue: 25 },
+          { id: 3, name: "REWARD 03", claimed: false, pointsValue: 25 },
+          { id: 4, name: "REWARD 03", claimed: false, pointsValue: 25 },
         ]);
 
         setLoading(false);
