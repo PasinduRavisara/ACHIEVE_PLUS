@@ -28,7 +28,8 @@ const RewardsAchievements = () => {
           { id: 1, name: "REWARD 01", claimed: false, pointsValue: 25 },
           { id: 2, name: "REWARD 02", claimed: false, pointsValue: 25 },
           { id: 3, name: "REWARD 03", claimed: false, pointsValue: 25 },
-          { id: 4, name: "REWARD 03", claimed: false, pointsValue: 25 },
+          { id: 4, name: "REWARD 04", claimed: false, pointsValue: 25 },
+          { id: 5, name: "REWARD 05", claimed: false, pointsValue: 25 },
         ]);
 
         setLoading(false);
