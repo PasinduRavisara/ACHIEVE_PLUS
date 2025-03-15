@@ -1,0 +1,65 @@
+@import "./variables.scss";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", "Segoe UI", Arial, sans-serif;
+}
+
+body {
+  background-color: #f0f2f5;
+}
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+  background-color: #f0f2f5;
+}
+
+.leaderboard-container {
+  background-color: $background-color;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.leaderboard-header {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: $primary-color;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.crown-icon {
+  color: $crown-color;
+  font-size: 24px;
+  margin-bottom: -10px;
+}
+
+.rank-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: $accent-color;
+  color: white;
+  font-weight: bold;
+}
