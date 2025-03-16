@@ -43,7 +43,7 @@ public class DataSeederService implements CommandLineRunner {
 
     private List<User> createUsers() {
         return Arrays.asList(
-                new User("John Smith", "john.smith@company.com", "Engineering"),
+                new User("John Doe", "john.smith@company.com", "Engineering"),
                 new User("Emily Johnson", "emily.johnson@company.com", "Marketing"),
                 new User("Michael Brown", "michael.brown@company.com", "Finance"),
                 new User("Jessica Davis", "jessica.davis@company.com", "Human Resources"),

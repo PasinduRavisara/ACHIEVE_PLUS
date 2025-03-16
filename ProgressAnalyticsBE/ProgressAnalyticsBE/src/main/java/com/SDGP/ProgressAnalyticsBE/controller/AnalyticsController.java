@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/analytics")
-@CrossOrigin(origins = "http://localhost:5173") // Adjust this based on your frontend URL
+@CrossOrigin(origins = "http://localhost:3000") // Adjust this based on your frontend URL
 public class AnalyticsController {
 
     @Autowired
