@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import RewardCard from "../components/RewardCard";
 import UserInfo from "../components/UserInfo";
+import Modal from "../components/Modal";
 import { getUserByUsername } from "../services/userService";
 import { getAllRewards } from "../services/rewardService";
 import "../styles/RewardStore.css";
@@ -11,29 +12,35 @@ const RewardStore = () => {
   const [user, setUser] = useState(null);
   const [rewards, setRewards] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [modal, setModal] = useState({ isOpen: false, title: "", message: "" });
 
   const fetchData = async () => {
     try {
       setLoading(true);
-      // Get the demouser first
       const userData = await getUserByUsername("demouser");
-      console.log("User data fetched:", userData); // Add this for debugging
+      console.log("User data:", userData);
 
-      if (userData && userData.id) {
+      if (userData) {
         setUser(userData);
-        // Get rewards only after we have a valid user
         const rewardsData = await getAllRewards();
         setRewards(rewardsData);
       } else {
-        console.error("User data is incomplete or invalid");
-        alert("Error loading user data. Please check the console for details.");
+        showModal("Error", "Failed to load user data");
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      alert("Failed to load data. Please check the console for details.");
+      showModal("Error", "Failed to load data from the server");
     } finally {
       setLoading(false);
     }
+  };
+
+  const showModal = (title, message) => {
+    setModal({ isOpen: true, title, message });
+  };
+
+  const closeModal = () => {
+    setModal({ ...modal, isOpen: false });
   };
 
   useEffect(() => {
@@ -54,8 +61,8 @@ const RewardStore = () => {
         <div className="header">
           <h1>REWARD STORE</h1>
           <div className="header-icons">
-            <span className="icon">📷</span>
-            <span className="icon">💬</span>
+            <span className="icon camera-icon">📷</span>
+            <span className="icon message-icon">💬</span>
             <span className="icon user-icon">👤</span>
           </div>
         </div>
@@ -81,6 +88,13 @@ const RewardStore = () => {
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={modal.isOpen}
+        onClose={closeModal}
+        title={modal.title}
+        message={modal.message}
+      />
     </div>
   );
 };
