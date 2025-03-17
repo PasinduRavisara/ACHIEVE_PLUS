@@ -1,17 +1,15 @@
 import React from "react";
-import Sidebar from "./components/Sidebar";
-import Navbar from "./components/Navbar";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import RewardStore from "./pages/RewardStore";
+import "./App.css";
 
 function App() {
   return (
-    <div className="app-container">
-      <Sidebar />
-      <div className="main-content">
-        <Navbar />
-        <RewardStore />
-      </div>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<RewardStore />} />
+      </Routes>
+    </Router>
   );
 }
 

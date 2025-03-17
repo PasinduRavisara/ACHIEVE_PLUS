@@ -1,0 +1,165 @@
+/* App-wide styles */
+body {
+  margin: 0;
+  font-family: "Arial", sans-serif;
+  background-color: #f0f2f5;
+}
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar styling */
+.sidebar {
+  width: 60px;
+  background-color: #192a56;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+}
+
+.sidebar-icon {
+  color: white;
+  font-size: 24px;
+  margin-bottom: 30px;
+  cursor: pointer;
+}
+
+.sidebar-icon.active {
+  color: #4cd137;
+}
+
+/* Main content area */
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.user-profile {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #1dd1a1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+}
+
+/* Points card styling */
+.points-card {
+  background-color: #a5b4fc;
+  border-radius: 15px;
+  padding: 15px;
+  margin-bottom: 30px;
+  text-align: center;
+  width: 250px;
+}
+
+.points-label {
+  color: white;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.points-value {
+  background-color: white;
+  border-radius: 25px;
+  padding: 8px 15px;
+  display: inline-block;
+  font-weight: bold;
+}
+
+/* Rewards section */
+.rewards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* Reward card styling */
+.reward-card {
+  background-color: white;
+  border-radius: 15px;
+  overflow: hidden;
+  width: 150px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.reward-image {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  background-color: #4a69bd;
+}
+
+.reward-details {
+  padding: 10px;
+  text-align: center;
+}
+
+.reward-name {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.reward-points {
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  font-style: italic;
+}
+
+.claim-button {
+  background-color: #ffa502;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  padding: 5px 15px;
+  cursor: pointer;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.claim-button:hover {
+  background-color: #ff7f50;
+}
+
+/* Gift image */
+.gift-image {
+  width: 200px;
+  position: absolute;
+  right: 50px;
+  top: 150px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .gift-image {
+    display: none;
+  }
+
+  .rewards-container {
+    justify-content: center;
+  }
+}

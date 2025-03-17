@@ -1,88 +1,86 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import Sidebar from "../components/Sidebar";
 import RewardCard from "../components/RewardCard";
-import { getUser, getRewards, claimReward } from "../services/api";
+import UserInfo from "../components/UserInfo";
+import { getUserByUsername } from "../services/userService";
+import { getAllRewards } from "../services/rewardService";
+import "../styles/RewardStore.css";
+import giftBoxImage from "../assets/images/gift-box.png";
 
 const RewardStore = () => {
   const [user, setUser] = useState(null);
   const [rewards, setRewards] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
-  // Fetch user and rewards data
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const userData = await getUser();
-        const rewardsData = await getRewards();
-
-        setUser(userData);
-        setRewards(rewardsData);
-        setLoading(false);
-      } catch (err) {
-        setError("Failed to load data. Please try again later.");
-        setLoading(false);
-        console.error("Error fetching data:", err);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  // Handle claim reward
-  const handleClaimReward = async (rewardId) => {
-    if (!user) return;
-
+  const fetchData = async () => {
     try {
-      await claimReward(user.id, rewardId);
+      setLoading(true);
+      // Get the demouser first
+      const userData = await getUserByUsername("demouser");
+      console.log("User data fetched:", userData); // Add this for debugging
 
-      // Update user points after claiming
-      const rewardClaimed = rewards.find((r) => r.id === rewardId);
-      if (rewardClaimed) {
-        setUser((prev) => ({
-          ...prev,
-          points: prev.points - rewardClaimed.pointsCost,
-        }));
+      if (userData && userData.id) {
+        setUser(userData);
+        // Get rewards only after we have a valid user
+        const rewardsData = await getAllRewards();
+        setRewards(rewardsData);
+      } else {
+        console.error("User data is incomplete or invalid");
+        alert("Error loading user data. Please check the console for details.");
       }
-
-      // Show success message (could add toast notification here)
-      alert("Reward claimed successfully!");
-    } catch (err) {
-      console.error("Error claiming reward:", err);
-      alert("Failed to claim reward. Please try again.");
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      alert("Failed to load data. Please check the console for details.");
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleRewardClaimed = () => {
+    fetchData(); // Refresh data after a reward is claimed
+  };
+
+  if (loading) return <div className="loading">Loading...</div>;
 
   return (
-    <div className="reward-store">
-      <h1 className="reward-store-title">REWARD STORE</h1>
+    <div className="reward-store-container">
+      <Sidebar />
 
-      <div className="points-container">
-        <div className="points-label">Points Earned</div>
-        <div className="points-value">
-          {user?.points.toLocaleString()} points
+      <div className="main-content">
+        <div className="header">
+          <h1>REWARD STORE</h1>
+          <div className="header-icons">
+            <span className="icon">📷</span>
+            <span className="icon">💬</span>
+            <span className="icon user-icon">👤</span>
+          </div>
+        </div>
+
+        <div className="content">
+          <div className="left-section">
+            <UserInfo points={user?.points || 0} />
+
+            <div className="rewards-grid">
+              {rewards.map((reward) => (
+                <RewardCard
+                  key={reward.id}
+                  reward={reward}
+                  userId={user?.id}
+                  onRewardClaimed={handleRewardClaimed}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="right-section">
+            <img src={giftBoxImage} alt="Gift Box" className="gift-box-image" />
+          </div>
         </div>
       </div>
-
-      <div className="rewards-grid">
-        {rewards.map((reward) => (
-          <RewardCard
-            key={reward.id}
-            reward={reward}
-            userPoints={user?.points || 0}
-            onClaimReward={handleClaimReward}
-          />
-        ))}
-      </div>
-
-      <img
-        src="/images/reward-box.png"
-        alt="Reward Box"
-        className="illustration"
-      />
     </div>
   );
 };
