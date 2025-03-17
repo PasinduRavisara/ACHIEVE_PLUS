@@ -12,6 +12,9 @@ export const getAllRewards = async () => {
 
 export const claimReward = async (userId, rewardId) => {
   try {
+    console.log(
+      `Sending claim request for user ${userId} and reward ${rewardId}`
+    );
     const response = await api.post(
       `/claims/user/${userId}/reward/${rewardId}`
     );
