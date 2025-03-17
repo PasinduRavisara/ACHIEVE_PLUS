@@ -6,18 +6,12 @@ const Modal = ({ isOpen, onClose, title, message }) => {
 
   return (
     <div className="modal-overlay">
-      <div className="modal-container">
-        <div className="modal-header">
-          <h3>{title}</h3>
-        </div>
-        <div className="modal-body">
-          <p>{message}</p>
-        </div>
-        <div className="modal-footer">
-          <button className="modal-button" onClick={onClose}>
-            OK
-          </button>
-        </div>
+      <div className="modal-content">
+        <h2>{title}</h2>
+        <p>{message}</p>
+        <button className="modal-button" onClick={onClose}>
+          OK
+        </button>
       </div>
     </div>
   );

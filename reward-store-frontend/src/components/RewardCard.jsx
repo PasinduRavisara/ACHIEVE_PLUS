@@ -2,30 +2,35 @@ import React, { useState } from "react";
 import "../styles/RewardCard.css";
 import { claimReward } from "../services/rewardService";
 
-const RewardCard = ({ reward, userId, onRewardClaimed }) => {
+const RewardCard = ({ reward, userId, onRewardClaimed, onClaimError }) => {
   const [isProcessing, setIsProcessing] = useState(false);
 
+  // Safely extract reward properties
+  const name = reward?.name || "Unknown Reward";
+  const pointsCost = reward?.pointsCost || 0;
+  const imageUrl = reward?.imageUrl || "/placeholder.jpg";
+  const id = reward?.id;
+
   const handleClaim = async () => {
-    if (!userId) {
-      alert("User information not available. Please refresh the page.");
+    if (isProcessing || !userId || !id) {
+      if (!userId) {
+        onClaimError("User information is missing. Please refresh the page.");
+      }
+      if (!id) {
+        onClaimError("Reward information is missing. Please refresh the page.");
+      }
       return;
     }
 
-    if (isProcessing) return;
-
     try {
       setIsProcessing(true);
-      console.log(`Attempting to claim reward ${reward.id} for user ${userId}`);
-      const response = await claimReward(userId, reward.id);
-      console.log("Claim response:", response);
-      alert("Reward claimed successfully!");
-      onRewardClaimed();
+      await claimReward(userId, id);
+      onRewardClaimed(pointsCost);
     } catch (error) {
       console.error("Error claiming reward:", error);
-      alert(
-        `Failed to claim reward: ${
-          error.response?.data || "Please check your points balance."
-        }`
+      onClaimError(
+        error.message ||
+          "Failed to claim reward. Please check your points balance."
       );
     } finally {
       setIsProcessing(false);
@@ -35,14 +40,19 @@ const RewardCard = ({ reward, userId, onRewardClaimed }) => {
   return (
     <div className="reward-card">
       <div className="reward-image">
-        <img src={reward.imageUrl} alt={reward.name} />
+        <img
+          src={imageUrl}
+          alt={name}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "/placeholder.jpg";
+          }}
+        />
       </div>
-      <div className="reward-name">{reward.name}</div>
-      <div className="reward-points">
-        {reward.pointsCost.toLocaleString()} Points
-      </div>
+      <div className="reward-name">{name}</div>
+      <div className="reward-points">{pointsCost.toLocaleString()} Points</div>
       <button
-        className={`claim-button ${isProcessing ? "processing" : ""}`}
+        className="claim-button"
         onClick={handleClaim}
         disabled={isProcessing}
       >

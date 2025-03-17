@@ -12,46 +12,84 @@ const RewardStore = () => {
   const [user, setUser] = useState(null);
   const [rewards, setRewards] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [modal, setModal] = useState({ isOpen: false, title: "", message: "" });
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalTitle, setModalTitle] = useState("");
+  const [refreshKey, setRefreshKey] = useState(0); // Add this to force re-render
 
   const fetchData = async () => {
     try {
       setLoading(true);
       const userData = await getUserByUsername("demouser");
-      console.log("User data:", userData);
+      const rewardsData = await getAllRewards();
 
-      if (userData) {
+      // Safely handle the user data
+      if (userData && typeof userData === "object") {
         setUser(userData);
-        const rewardsData = await getAllRewards();
+      } else {
+        console.error("Invalid user data received:", userData);
+        showModal("Error", "Failed to load user data correctly.");
+      }
+
+      // Safely handle the rewards data
+      if (Array.isArray(rewardsData)) {
         setRewards(rewardsData);
       } else {
-        showModal("Error", "Failed to load user data");
+        console.error("Invalid rewards data received:", rewardsData);
+        showModal("Error", "Failed to load rewards data correctly.");
       }
     } catch (error) {
       console.error("Error fetching data:", error);
-      showModal("Error", "Failed to load data from the server");
+      showModal("Error", "Failed to load data. Please refresh the page.");
     } finally {
       setLoading(false);
     }
   };
 
-  const showModal = (title, message) => {
-    setModal({ isOpen: true, title, message });
-  };
-
-  const closeModal = () => {
-    setModal({ ...modal, isOpen: false });
-  };
-
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [refreshKey]); // Add refreshKey as dependency
 
-  const handleRewardClaimed = () => {
-    fetchData(); // Refresh data after a reward is claimed
+  const showModal = (title, message) => {
+    setModalTitle(title);
+    setModalMessage(message);
+    setModalOpen(true);
   };
 
-  if (loading) return <div className="loading">Loading...</div>;
+  const handleRewardClaimed = async (pointsCost) => {
+    try {
+      // Show success message
+      showModal("Success", "Reward claimed successfully!");
+
+      // Update locally to give immediate feedback
+      if (user) {
+        setUser({
+          ...user,
+          points: Math.max(0, user.points - pointsCost),
+        });
+      }
+
+      // Wait for the modal to be shown before refreshing data
+      setTimeout(() => {
+        // Refresh data by changing the refreshKey
+        setRefreshKey((prevKey) => prevKey + 1);
+      }, 1500);
+    } catch (error) {
+      console.error("Error handling reward claim:", error);
+      showModal("Error", "Something went wrong while updating your points.");
+    }
+  };
+
+  const handleClaimError = (message) => {
+    showModal(
+      "Claim Failed",
+      message || "Failed to claim reward. Please check your points balance."
+    );
+  };
+
+  if (loading && !user) {
+    return <div className="loading">Loading...</div>;
+  }
 
   return (
     <div className="reward-store-container">
@@ -72,14 +110,16 @@ const RewardStore = () => {
             <UserInfo points={user?.points || 0} />
 
             <div className="rewards-grid">
-              {rewards.map((reward) => (
-                <RewardCard
-                  key={reward.id}
-                  reward={reward}
-                  userId={user?.id}
-                  onRewardClaimed={handleRewardClaimed}
-                />
-              ))}
+              {Array.isArray(rewards) &&
+                rewards.map((reward) => (
+                  <RewardCard
+                    key={reward.id}
+                    reward={reward}
+                    userId={user?.id}
+                    onRewardClaimed={handleRewardClaimed}
+                    onClaimError={handleClaimError}
+                  />
+                ))}
             </div>
           </div>
 
@@ -90,10 +130,10 @@ const RewardStore = () => {
       </div>
 
       <Modal
-        isOpen={modal.isOpen}
-        onClose={closeModal}
-        title={modal.title}
-        message={modal.message}
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={modalTitle}
+        message={modalMessage}
       />
     </div>
   );

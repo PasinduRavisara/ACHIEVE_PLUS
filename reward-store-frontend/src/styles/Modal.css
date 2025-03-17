@@ -4,57 +4,28 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
 }
 
-.modal-container {
+.modal-content {
   background-color: #222;
-  border-radius: 8px;
-  width: 400px;
-  max-width: 90%;
   color: white;
-  overflow: hidden;
-}
-
-.modal-header {
-  background-color: #333;
-  padding: 15px 20px;
-  border-bottom: 1px solid #444;
-  text-align: center;
-}
-
-.modal-header h3 {
-  margin: 0;
-  color: white;
-}
-
-.modal-body {
   padding: 20px;
+  border-radius: 5px;
+  max-width: 400px;
   text-align: center;
-}
-
-.modal-footer {
-  padding: 10px 20px;
-  display: flex;
-  justify-content: center;
-  border-top: 1px solid #444;
 }
 
 .modal-button {
-  background-color: #ff4081;
+  background-color: #ff3366;
   color: white;
   border: none;
-  border-radius: 4px;
   padding: 8px 20px;
-  font-size: 14px;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.modal-button:hover {
-  background-color: #f50057;
+  margin-top: 15px;
 }

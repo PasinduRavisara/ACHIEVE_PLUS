@@ -30,36 +30,25 @@ public class RewardClaimService {
         Optional<User> optionalUser = userRepository.findById(userId);
         Optional<Reward> optionalReward = rewardRepository.findById(rewardId);
 
-        if (optionalUser.isEmpty()) {
-            throw new RuntimeException("User not found");
+        if (optionalUser.isPresent() && optionalReward.isPresent()) {
+            User user = optionalUser.get();
+            Reward reward = optionalReward.get();
+
+            // Check if user has enough points and reward is active
+            if (user.getPoints() >= reward.getPointsCost() && reward.isActive()) {
+                // Deduct points
+                int newPointsBalance = user.getPoints() - reward.getPointsCost();
+                user.setPoints(newPointsBalance);
+
+                // Create user reward record
+                UserReward userReward = new UserReward(user, reward);
+                userRewardRepository.save(userReward);
+
+                // Save user with updated points
+                userRepository.save(user);
+                return true;
+            }
         }
-
-        if (optionalReward.isEmpty()) {
-            throw new RuntimeException("Reward not found");
-        }
-
-        User user = optionalUser.get();
-        Reward reward = optionalReward.get();
-
-        // Check if reward is active
-        if (!reward.isActive()) {
-            throw new RuntimeException("Reward is not available");
-        }
-
-        // Check if user has enough points
-        if (user.getPoints() < reward.getPointsCost()) {
-            throw new RuntimeException("Insufficient points to claim this reward");
-        }
-
-        // Deduct points
-        user.setPoints(user.getPoints() - reward.getPointsCost());
-
-        // Create user reward record
-        UserReward userReward = new UserReward(user, reward);
-        user.getClaimedRewards().add(userReward);
-
-        // Save everything
-        userRepository.save(user);
-        return true;
+        return false;
     }
 }
