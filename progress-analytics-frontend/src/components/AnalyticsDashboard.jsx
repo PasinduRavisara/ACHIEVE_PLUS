@@ -18,20 +18,24 @@ const AnalyticsDashboard = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchMetrics = useCallback(async (range) => {
-    try {
-      setLoading(true);
-      const response = await fetch(`http://localhost:8080/api/analytics/metrics?dateRange=${range}`);
-      if (!response.ok) throw new Error("Failed to fetch metrics");
+  const fetchMetrics = useCallback(async (range: string) => {
+    setLoading(true);
+    setError(null);
 
-      const data = await response.json();
-      setMetrics(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  try {
+    const res = await fetch(
+      `http://localhost:8080/api/analytics/metrics?dateRange=${range}`
+    );
+    if (!res.ok) throw new Error("Failed to fetch analytics metrics.");
+
+    const data = await res.json();
+    setMetrics(data);
+  } catch (err: any) {
+    setError(err.message || "Something went wrong.");
+  } finally {
+    setLoading(false);
+  }
+}, []);
 
   useEffect(() => {
     fetchMetrics(dateRange);
