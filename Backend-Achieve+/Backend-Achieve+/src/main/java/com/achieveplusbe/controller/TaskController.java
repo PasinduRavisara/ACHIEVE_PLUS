@@ -37,6 +37,7 @@ public class TaskController {
         return ResponseEntity.ok(taskService.updateTaskStatus(id, status.get("status")));
     }
 
+    //Statistics related API
     @GetMapping("/my-stats")
     public ResponseEntity<Map<String, Object>> getCurrentUserStats() {
         return ResponseEntity.ok(taskService.getCurrentUserStats());
@@ -75,6 +76,8 @@ public class TaskController {
         taskService.deleteTask(id);
         return ResponseEntity.noContent().build();
     }
+
+    //Statistics related API
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin/stats")
