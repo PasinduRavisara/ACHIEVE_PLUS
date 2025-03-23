@@ -18,11 +18,12 @@ import { getAllUsers } from "../../api/users";
 import AdminReminders from './AdminReminders';
 import { BsArrowUp, BsArrowDown, BsSpeedometer2, BsListCheck, BsPeople, 
   BsGraphUp, BsBarChartLine, BsShop, BsGear, BsCheckCircle, 
-  BsArrowRepeat, BsPlusCircle, BsInfoCircle, BsClock } from "react-icons/bs";
+  BsArrowRepeat, BsPlusCircle, BsInfoCircle, BsClock, BsSun, BsMoon, BsStars, BsTrophy, BsBrightnessAltHigh, BsFillSunFill, BsFillPeopleFill } from "react-icons/bs";
+import "../../styles/AdminStyles.css";
 
 const AdminDashboard = ({ onLogout }) => {
   const { currentUser } = useAuth();
-  const [tasks, setTasks] = useState([]);
+  const [, setTasks] = useState([]);
   const [users, setUsers] = useState([]);
   const [taskStats, setTaskStats] = useState({
     totalTasks: 0,
@@ -30,26 +31,20 @@ const AdminDashboard = ({ onLogout }) => {
     pendingTasks: 0,
     inProgressTasks: 0,
   });
-  const [loading, setLoading] = useState(true);
-  const [projectFilter, setProjectFilter] = useState("All Projects");
+  const [, setLoading] = useState(true);
+  // const [projectFilter, setProjectFilter] = useState("All Projects");
+  const [greeting, setGreeting] = useState("");
 
   const adminSidebarItems = [
-        { title: "Dashboard", path: "/admin-dashboard", icon: "bi-speedometer2" },
-        { title: "Tasks", path: "/admin-tasks", icon: "bi-list-check" },
-        { title: "Employees", path: "/admin-employees", icon: "bi-people" },
-        {
-          title: "Progress Analysis",
-          path: "/admin-progress",
-          icon: "bi-graph-up",
-        },
-        {
-          title: "Leaderboard",
-          path: "/leaderboard",
-          icon: "bi-bar-chart-line",
-        },
-        { title: "Reward Store", path: "/admin-reward-store", icon: "bi-shop" },
-        { title: "Settings", path: "/admin-settings", icon: "bi-gear" },
-      ];
+    { title: "Dashboard", path: "/admin-dashboard", icon: "bi-speedometer2" },
+    { title: "Tasks", path: "/admin-tasks", icon: "bi-list-check" },
+    { title: "Progress Analysis", path: "/admin-progress", icon: "bi-graph-up" },
+    { title: "Leaderboard", path: "/admin-leaderboard", icon: "bi-bar-chart-line" },
+    { title: "Reward Store", path: "/admin-reward-store", icon: "bi-shop" },
+    { title: "Employees", path: "/admin-employees", icon: "bi-people" },
+    { title: "Settings", path: "/admin-settings", icon: "bi-gear" },
+  ];
+  
     
   // Feature cards for the dashboard
   const featureCards = [
@@ -78,10 +73,22 @@ const AdminDashboard = ({ onLogout }) => {
       title: "Leaderboard",
       description: "View top performers and encourage healthy competition",
       icon: <BsBarChartLine size={24} />,
-      color: "danger",
+      color: "warning",
       path: "/admin-leaderboard",
     },
   ];
+
+  // Function to get time-based greeting
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good Morning";
+    if (hour < 18) return "Good Afternoon";
+    return "Good Evening";
+  };
+
+  useEffect(() => {
+    setGreeting(getGreeting());
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -124,87 +131,6 @@ const AdminDashboard = ({ onLogout }) => {
     fetchData();
   }, []);
 
-  // Group tasks by assignee to create "projects"
-  const groupTasksByAssignee = () => {
-    const projectMap = {};
-
-    tasks.forEach((task) => {
-      const assigneeId = task.assignedTo;
-      if (!projectMap[assigneeId]) {
-        const assignee = users.find((user) => user.id === assigneeId);
-        const assigneeName = assignee
-          ? assignee.fullName ||
-            `${assignee.firstName || ""} ${assignee.lastName || ""}`.trim()
-          : "Unassigned";
-
-        projectMap[assigneeId] = {
-          name: `${assigneeName}'s Tasks`,
-          tasks: [],
-          teamSize: 1,
-          totalPoints: 0,
-          completedPoints: 0,
-        };
-      }
-
-      projectMap[assigneeId].tasks.push(task);
-      projectMap[assigneeId].totalPoints += task.points || 0;
-      if (task.status === "COMPLETED" || task.status === "Completed") {
-        projectMap[assigneeId].completedPoints += task.points || 0;
-      }
-    });
-
-    // Convert to array and calculate progress
-    return Object.values(projectMap)
-      .map((project) => {
-        const progress =
-          project.totalPoints > 0
-            ? Math.round((project.completedPoints / project.totalPoints) * 100)
-            : 0;
-
-        // Calculate days left based on the latest due date
-        const latestDueDate = project.tasks.reduce((latest, task) => {
-          if (!task.dueDate) return latest;
-          const dueDate = new Date(task.dueDate);
-          return latest > dueDate ? latest : dueDate;
-        }, new Date());
-
-        const today = new Date();
-        const daysLeft = Math.max(
-          0,
-          Math.ceil((latestDueDate - today) / (1000 * 60 * 60 * 24))
-        );
-
-        // Determine status based on progress
-        let status, color;
-        if (progress === 100) {
-          status = "Completed";
-          color = "success";
-        } else if (progress >= 50) {
-          status = "In Progress";
-          color = "primary";
-        } else if (progress > 0) {
-          status = "In Progress";
-          color = "info";
-        } else {
-          status = "Not Started";
-          color = "warning";
-        }
-
-        return {
-          ...project,
-          progress,
-          daysLeft,
-          status,
-          color,
-        };
-      })
-      .filter((project) => {
-        // Apply filter if needed
-        if (projectFilter === "All Projects") return true;
-        return project.status === projectFilter;
-      })
-      .sort((a, b) => b.progress - a.progress);
-  };
 
   // Calculate completion rate and change from previous
   const getCompletionRate = () => {
@@ -213,8 +139,7 @@ const AdminDashboard = ({ onLogout }) => {
     const completionRate = Math.round(
       (taskStats.completedTasks / taskStats.totalTasks) * 100
     );
-    // In a real app, you would compare with previous period data
-    // For demo, we'll assume a random positive change
+  //for demo random number
     const change = `+${Math.floor(Math.random() * 10)}%`;
 
     return { value: `${completionRate}%`, change };
@@ -253,8 +178,6 @@ const AdminDashboard = ({ onLogout }) => {
       color: "warning",
     },
   ];
-
-  const projectStats = groupTasksByAssignee();
 
   // Custom loading spinner component
   const LoadingSpinner = () => (
@@ -299,313 +222,203 @@ const AdminDashboard = ({ onLogout }) => {
 
   return (
     <DashboardLayout sidebarItems={adminSidebarItems}>
-      <Navbar userType="admin" onLogout={onLogout} />
-      
-      {/* Header with gradient background */}
-      <div className="mb-4 p-4 bg-gradient-primary-to-secondary text-blue rounded-lg shadow-sm">
-        <h1 className="mb-2 display-5">Welcome, {currentUser?.fullName || "Admin"}</h1>
-        <h5 className="fw-light opacity-60">
-          Manage your team and boost productivity with AchievePlus
-        </h5>
-      </div>
+      <div className="admin-dashboard-bg min-vh-100">
+        <Navbar userType="admin" onLogout={onLogout} />
+        
+        {/* Enhanced Header with gradient background and greeting */}
+        <div className="mb-4 p-4 bg-gradient-primary-to-secondary text-white rounded-lg shadow-lg position-relative overflow-hidden">
+          <div className="position-absolute top-0 end-0 opacity-10 pe-4 me-4 mt-4">
+            {greeting === "Good Morning" && <BsFillPeopleFill  size={95} />}
+            {greeting === "Good Afternoon" && <BsFillPeopleFill  size={95} />}
+            {greeting === "Good Evening" && <BsFillPeopleFill  size={95}/>}
+          </div>
+          <div className="position-relative">
+            <h3 className="mb-2 display-6 fw-bold">
+              {greeting}, {currentUser?.fullName || "Admin"}
+            </h3>
+            <h5 className="fw-semibold opacity-90">
+              Manage your team and boost productivity with AchievePlus
+            </h5>
+          </div>
+        </div>
 
-      {/* Company Overview Stats with animations */}
-      <Row className="mb-4 g-3">
-        {companyOverview.map((stat, index) => (
-          <Col md={6} lg={3} key={index}>
-            <Card className="h-100 border-0 shadow-sm hover-lift" 
-                  style={{ transition: "transform 0.2s", cursor: "pointer" }}
-                  onMouseOver={(e) => e.currentTarget.style.transform = "translateY(-5px)"}
-                  onMouseOut={(e) => e.currentTarget.style.transform = "translateY(0)"}>
-              <Card.Body>
-                <div className="d-flex justify-content-between align-items-center">
-                  <div>
-                    <p className="text-muted mb-1 small text-uppercase fw-bold">{stat.title}</p>
-                    <h3 className="mb-0 fw-bold">{stat.value}</h3>
-                    <span
-                      className={`badge bg-${stat.color}-subtle text-${stat.color} mt-2 px-2 py-1`}
-                    >
-                      {stat.change}{" "}
-                      {stat.change.startsWith("+") ? <BsArrowUp /> : <BsArrowDown />}
-                    </span>
-                  </div>
-                  <div className={`bg-${stat.color}-subtle p-3 rounded-circle`}>
-                    {stat.icon}
-                  </div>
-                </div>
-              </Card.Body>
-            </Card>
-          </Col>
-        ))}
-      </Row>
-
-      {/* Feature Cards with hover effects */}
-      <Row className="mb-4 g-3">
-        {featureCards.map((feature, index) => (
-          <Col md={6} lg={3} key={index}>
-            <Link to={feature.path} className="text-decoration-none">
-              <Card className="h-100 shadow-sm hover-card border-0" 
-                    style={{ transition: "all 0.3s ease", overflow: "hidden" }}
+        {/* Enhanced Stats with animations */}
+        <Row className="mb-4 g-3">
+          {companyOverview.map((stat, index) => (
+            <Col md={6} lg={3} key={index}>
+              <Card className="h-100 border-0 shadow-sm hover-lift" 
+                    style={{ 
+                      transition: "all 0.3s ease",
+                      background: "linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)",
+                      cursor: "pointer"
+                    }}
                     onMouseOver={(e) => {
-                      e.currentTarget.style.transform = "translateY(-8px)";
+                      e.currentTarget.style.transform = "translateY(-5px)";
                       e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.1)";
                     }}
                     onMouseOut={(e) => {
                       e.currentTarget.style.transform = "translateY(0)";
                       e.currentTarget.style.boxShadow = "0 .125rem .25rem rgba(0,0,0,.075)";
                     }}>
-                <div className={`bg-${feature.color} p-2 position-absolute top-0 start-0 end-0`} style={{ height: "8px" }}></div>
-                <Card.Body className="d-flex flex-column align-items-center text-center p-4 pt-5">
-                  <div
-                    className={`rounded-circle bg-${feature.color}-subtle p-3 mb-3 d-flex align-items-center justify-content-center`}
-                    style={{ width: "70px", height: "70px" }}
-                  >
-                    <span className={`text-${feature.color}`}>{feature.icon}</span>
+                <Card.Body>
+                  <div className="d-flex justify-content-between align-items-center">
+                    <div>
+                      <p className="text-muted mb-1 small text-uppercase fw-bold">{stat.title}</p>
+                      <h3 className="mb-0 fw-bold">{stat.value}</h3>
+                      <span
+                        className={`badge bg-${stat.color}-subtle text-${stat.color} mt-2 px-2 py-1`}
+                      >
+                        {stat.change}{" "}
+                        {stat.change.startsWith("+") ? <BsArrowUp /> : <BsArrowDown />}
+                      </span>
+                    </div>
+                    <div className={`bg-${stat.color}-subtle p-3 rounded-circle`}>
+                      {stat.icon}
+                    </div>
                   </div>
-                  <h5 className="card-title fw-bold">{feature.title}</h5>
-                  <p className="card-text text-muted">{feature.description}</p>
                 </Card.Body>
               </Card>
-            </Link>
-          </Col>
-        ))}
-      </Row>
+            </Col>
+          ))}
+        </Row>
 
-      {/* Projects Overview with improved table */}
-      <Row className="mb-4 g-3">
-        <Col lg={8}>
-          <Card className="border-0 shadow-sm h-100">
-            <Card.Header className="bg-white border-0 py-3">
-              <div className="d-flex justify-content-between align-items-center">
-                <h5 className="mb-0 fw-bold">Tasks by Employee</h5>
-                <div>
-                  <Dropdown align="end">
-                    <Dropdown.Toggle
-                      variant="outline-primary"
-                      size="sm"
-                      id="project-filter"
-                      className="rounded-pill px-3"
+        {/* Enhanced Feature Route Cards with hover effects */}
+        <Row className="mb-4 g-3">
+          {featureCards.map((feature, index) => (
+            <Col md={6} lg={3} key={index}>
+              <Link to={feature.path} className="text-decoration-none">
+                <Card className="h-100 shadow-sm hover-card border-0" 
+                      style={{ 
+                        transition: "all 0.3s ease",
+                        background: "linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)",
+                        overflow: "hidden"
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.transform = "translateY(-8px)";
+                        e.currentTarget.style.boxShadow = "0 10px 20px rgba(0,0,0,0.1)";
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.transform = "translateY(0)";
+                        e.currentTarget.style.boxShadow = "0 .125rem .25rem rgba(0,0,0,.075)";
+                      }}>
+                  <div className={`bg-${feature.color} p-2 position-absolute top-0 start-0 end-0`} style={{ height: "8px" }}></div>
+                  <Card.Body className="d-flex flex-column align-items-center text-center p-4 pt-5">
+                    <div
+                      className={`rounded-circle bg-${feature.color}-subtle p-3 mb-3 d-flex align-items-center justify-content-center`}
+                      style={{ width: "70px", height: "70px" }}
                     >
-                      {projectFilter}
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu className="shadow-sm border-0">
-                      <Dropdown.Item
-                        onClick={() => setProjectFilter("All Projects")}
-                        active={projectFilter === "All Projects"}
-                      >
-                        All Projects
-                      </Dropdown.Item>
-                      <Dropdown.Item
-                        onClick={() => setProjectFilter("In Progress")}
-                        active={projectFilter === "In Progress"}
-                      >
-                        In Progress
-                      </Dropdown.Item>
-                      <Dropdown.Item
-                        onClick={() => setProjectFilter("Not Started")}
-                        active={projectFilter === "Not Started"}
-                      >
-                        Not Started
-                      </Dropdown.Item>
-                      <Dropdown.Item
-                        onClick={() => setProjectFilter("Completed")}
-                        active={projectFilter === "Completed"}
-                      >
-                        Completed
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  </Dropdown>
+                      <span className={`text-${feature.color}`}>{feature.icon}</span>
+                    </div>
+                    <h5 className="card-title fw-bold">{feature.title}</h5>
+                    <p className="card-text text-muted">{feature.description}</p>
+                  </Card.Body>
+                </Card>
+              </Link>
+            </Col>
+          ))}
+        </Row>
+
+
+        {/* Task Stats with progress bars */}
+        <Row className="mb-4 g-3">
+          <Col>
+            <Card className="border-0 shadow-sm">
+              <Card.Header className="bg-white border-0 py-3">
+                <h5 className="mb-0 fw-bold">Task Status Overview</h5>
+              </Card.Header>
+              <Card.Body>
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                  <div>
+                    <h6 className="mb-2 text-muted">Total Progress</h6>
+                    <div className="d-flex align-items-baseline">
+                      <span className="display-6 fw-bold me-2">{taskStats.completedTasks}</span>
+                      <span className="text-muted">
+                        / {taskStats.totalTasks} tasks completed
+                      </span>
+                    </div>
+                  </div>
+                  <div>
+                    <Button 
+                      variant="primary" 
+                      as={Link} 
+                      to="/admin-tasks"
+                      className="rounded-pill px-4 py-2 d-flex align-items-center"
+                    >
+                      <BsListCheck className="me-2" /> View All Tasks
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </Card.Header>
-            <Card.Body className="p-0">
-              {loading ? (
-                <LoadingSpinner />
-              ) : projectStats.length === 0 ? (
-                <EmptyState 
-                  icon={<BsInfoCircle className="fs-1 text-muted" />} 
-                  message="No projects found for the selected filter." 
-                />
-              ) : (
-                <Table hover responsive borderless className="align-middle mb-0">
-                  <thead className="bg-light">
-                    <tr>
-                      <th className="ps-4 py-3">Employee</th>
-                      <th className="py-3">Progress</th>
-                      <th className="py-3">Status</th>
-                      <th className="py-3">Days Left</th>
-                      <th className="py-3">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {projectStats.map((project, index) => (
-                      <tr key={index} className="align-middle">
-                        <td className="ps-4 py-3">
-                          <div className="d-flex align-items-center">
-                            <Avatar name={project.name} color={project.color} />
-                            <div className="ms-3">
-                              <h6 className="mb-0 fw-semibold">{project.name}</h6>
-                              <small className="text-muted">
-                                {project.tasks.length} {project.tasks.length === 1 ? "task" : "tasks"}
-                              </small>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="py-3">
-                          <div className="d-flex align-items-center">
-                            <div
-                              className="progress flex-grow-1"
-                              style={{ height: "8px", borderRadius: "10px" }}
-                            >
-                              <div
-                                className={`progress-bar bg-${project.color}`}
-                                role="progressbar"
-                                style={{ 
-                                  width: `${project.progress}%`,
-                                  borderRadius: "10px" 
-                                }}
-                                aria-valuenow={project.progress}
-                                aria-valuemin="0"
-                                aria-valuemax="100"
-                              ></div>
-                            </div>
-                            <span className="ms-2 fw-semibold">{project.progress}%</span>
-                          </div>
-                        </td>
-                        <td className="py-3">
-                          <Badge bg={`${project.color}-subtle`} text={project.color} 
-                                 className="px-3 py-2 rounded-pill fw-normal">
-                            {project.status}
-                          </Badge>
-                        </td>
-                        <td className="py-3">
-                          {project.daysLeft > 0 ? (
-                            <span className={`text-${project.daysLeft < 3 ? 'warning' : 'muted'}`}>
-                              {project.daysLeft} {project.daysLeft === 1 ? "day" : "days"} left
-                            </span>
-                          ) : (
-                            <span className="text-danger fw-semibold">Overdue</span>
-                          )}
-                        </td>
-                        <td className="py-3">
-                          <Link
-                            to={`/admin-tasks?assignee=${
-                              project.name.split("'")[0]
-                            }`}
-                            className={`btn btn-sm btn-${project.color} rounded-pill px-3`}
-                          >
-                            View Tasks
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              )}
-            </Card.Body>
-          </Card>
-        </Col>
 
-        {/* Reminders section */}
-        <Col lg={4}>
-          <AdminReminders />
-        </Col>
-      </Row>
+                <div className="mb-4">
+                  <div className="d-flex justify-content-between mb-2">
+                    <div>
+                      <Badge bg="primary-subtle" text="primary" className="px-3 py-2 rounded-pill">
+                        <BsArrowRepeat className="me-1" /> In Progress: {taskStats.inProgressTasks}
+                      </Badge>
+                    </div>
+                    <div className="fw-semibold">
+                      {Math.round(
+                        (taskStats.inProgressTasks / taskStats.totalTasks) * 100
+                      ) || 0}%
+                    </div>
+                  </div>
+                  <ProgressBar
+                    variant="primary"
+                    now={(taskStats.inProgressTasks / taskStats.totalTasks) * 100 || 0}
+                    style={{ height: "10px", borderRadius: "10px" }}
+                    animated
+                  />
+                </div>
 
-      {/* Task Stats with improved visuals */}
-      <Row className="mb-4 g-3">
-        <Col>
-          <Card className="border-0 shadow-sm">
-            <Card.Header className="bg-white border-0 py-3">
-              <h5 className="mb-0 fw-bold">Task Status Overview</h5>
-            </Card.Header>
-            <Card.Body>
-              <div className="d-flex justify-content-between align-items-center mb-4">
+                <div className="mb-4">
+                  <div className="d-flex justify-content-between mb-2">
+                    <div>
+                      <Badge bg="success-subtle" text="success" className="px-3 py-2 rounded-pill">
+                        <BsCheckCircle className="me-1" /> Completed: {taskStats.completedTasks}
+                      </Badge>
+                    </div>
+                    <div className="fw-semibold">
+                      {Math.round(
+                        (taskStats.completedTasks / taskStats.totalTasks) * 100
+                      ) || 0}%
+                    </div>
+                  </div>
+                  <ProgressBar
+                    variant="success"
+                    now={(taskStats.completedTasks / taskStats.totalTasks) * 100 || 0}
+                    style={{ height: "10px", borderRadius: "10px" }}
+                  />
+                </div>
+
                 <div>
-                  <h6 className="mb-2 text-muted">Total Progress</h6>
-                  <div className="d-flex align-items-baseline">
-                    <span className="display-6 fw-bold me-2">{taskStats.completedTasks}</span>
-                    <span className="text-muted">
-                      / {taskStats.totalTasks} tasks completed
-                    </span>
+                  <div className="d-flex justify-content-between mb-2">
+                    <div>
+                      <Badge bg="warning-subtle" text="warning" className="px-3 py-2 rounded-pill">
+                        <BsClock className="me-1" /> Pending: {taskStats.pendingTasks}
+                      </Badge>
+                    </div>
+                    <div className="fw-semibold">
+                      {Math.round(
+                        (taskStats.pendingTasks / taskStats.totalTasks) * 100
+                      ) || 0}%
+                    </div>
                   </div>
+                  <ProgressBar
+                    variant="warning"
+                    now={(taskStats.pendingTasks / taskStats.totalTasks) * 100 || 0}
+                    style={{ height: "10px", borderRadius: "10px" }}
+                  />
                 </div>
-                <div>
-                  <Button 
-                    variant="primary" 
-                    as={Link} 
-                    to="/admin-tasks"
-                    className="rounded-pill px-4 py-2 d-flex align-items-center"
-                  >
-                    <BsListCheck className="me-2" /> View All Tasks
-                  </Button>
-                </div>
-              </div>
-
-              <div className="mb-4">
-                <div className="d-flex justify-content-between mb-2">
-                  <div>
-                    <Badge bg="primary-subtle" text="primary" className="px-3 py-2 rounded-pill">
-                      <BsArrowRepeat className="me-1" /> In Progress: {taskStats.inProgressTasks}
-                    </Badge>
-                  </div>
-                  <div className="fw-semibold">
-                    {Math.round(
-                      (taskStats.inProgressTasks / taskStats.totalTasks) * 100
-                    ) || 0}%
-                  </div>
-                </div>
-                <ProgressBar
-                  variant="primary"
-                  now={(taskStats.inProgressTasks / taskStats.totalTasks) * 100 || 0}
-                  style={{ height: "10px", borderRadius: "10px" }}
-                  animated
-                />
-              </div>
-
-              <div className="mb-4">
-                <div className="d-flex justify-content-between mb-2">
-                  <div>
-                    <Badge bg="success-subtle" text="success" className="px-3 py-2 rounded-pill">
-                      <BsCheckCircle className="me-1" /> Completed: {taskStats.completedTasks}
-                    </Badge>
-                  </div>
-                  <div className="fw-semibold">
-                    {Math.round(
-                      (taskStats.completedTasks / taskStats.totalTasks) * 100
-                    ) || 0}%
-                  </div>
-                </div>
-                <ProgressBar
-                  variant="success"
-                  now={(taskStats.completedTasks / taskStats.totalTasks) * 100 || 0}
-                  style={{ height: "10px", borderRadius: "10px" }}
-                />
-              </div>
-
-              <div>
-                <div className="d-flex justify-content-between mb-2">
-                  <div>
-                    <Badge bg="warning-subtle" text="warning" className="px-3 py-2 rounded-pill">
-                      <BsClock className="me-1" /> Pending: {taskStats.pendingTasks}
-                    </Badge>
-                  </div>
-                  <div className="fw-semibold">
-                    {Math.round(
-                      (taskStats.pendingTasks / taskStats.totalTasks) * 100
-                    ) || 0}%
-                  </div>
-                </div>
-                <ProgressBar
-                  variant="warning"
-                  now={(taskStats.pendingTasks / taskStats.totalTasks) * 100 || 0}
-                  style={{ height: "10px", borderRadius: "10px" }}
-                />
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+              </Card.Body>
+            </Card>
+          </Col>
+          
+          {/* Reminders section */}
+          <Col lg={4}>
+            <AdminReminders />
+          </Col>
+        </Row>
+      </div>
     </DashboardLayout>
   );
 };
