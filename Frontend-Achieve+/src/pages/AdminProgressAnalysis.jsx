@@ -445,16 +445,6 @@ const AdminProgressAnalysis = ({ onLogout }) => {
     });
   };
 
-  const renderComparison = (current, previous) => {
-    const diff = current - previous;
-    const percentChange = previous === 0 ? 0 : Math.round((diff / previous) * 100);
-    
-    return (
-      <span className={`small ${diff > 0 ? 'text-success' : diff < 0 ? 'text-danger' : 'text-muted'}`}>
-        {diff > 0 ? '↑' : diff < 0 ? '↓' : '→'} {Math.abs(percentChange)}%
-      </span>
-    );
-  };
 
   if (loading) {
     return (
@@ -555,10 +545,7 @@ const AdminProgressAnalysis = ({ onLogout }) => {
                         <h3 className="mb-0 fw-bold">
                           {taskStats.overallMetrics.totalTasks}
                           <small className="text-muted ms-2 fs-6">
-                            {renderComparison(
-                              taskStats.overallMetrics.totalTasks, 
-                              taskStats.overallMetrics.prevTotalTasks
-                            )}
+                            
                           </small>
                         </h3>
                         <div className="text-muted small">Total Tasks</div>
@@ -580,10 +567,7 @@ const AdminProgressAnalysis = ({ onLogout }) => {
                         <h3 className="mb-0 fw-bold">
                           {taskStats.overallMetrics.completedTasks}
                           <small className="text-muted ms-2 fs-6">
-                            {renderComparison(
-                              taskStats.overallMetrics.completedTasks,
-                              taskStats.overallMetrics.prevCompletedTasks
-                            )}
+                            
                           </small>
                         </h3>
                         <div className="text-muted small">Completed Tasks</div>
@@ -605,10 +589,7 @@ const AdminProgressAnalysis = ({ onLogout }) => {
                         <h3 className="mb-0 fw-bold">
                           {taskStats.overallMetrics.completedPoints}
                           <small className="text-muted ms-2 fs-6">
-                            {renderComparison(
-                              taskStats.overallMetrics.completedPoints,
-                              taskStats.overallMetrics.totalPoints - taskStats.overallMetrics.completedPoints
-                            )}
+                            
                           </small>
                         </h3>
                         <div className="text-muted small">Points Earned</div>
@@ -630,7 +611,7 @@ const AdminProgressAnalysis = ({ onLogout }) => {
                         <h3 className="mb-0 fw-bold">
                           {taskStats.overallMetrics.overdueTasks}
                           <small className="text-muted ms-2 fs-6">
-                            {renderComparison(0, taskStats.overallMetrics.overdueTasks)}
+                            
                           </small>
                         </h3>
                         <div className="text-muted small">Current Overdue Tasks</div>
