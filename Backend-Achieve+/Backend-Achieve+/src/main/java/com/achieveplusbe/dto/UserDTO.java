@@ -27,6 +27,10 @@ public class UserDTO {
     @NotBlank(message = "Role is required")
     private String role;
 
+//    //For Unit Testing
+//    public UserDTO(String mail, String password123, String user, String user1) {
+//    }
+
     public Long getId() {
         return id;
     }

@@ -60,6 +60,10 @@ public class User {
         this.email = email;
     }
 
+//    //For Unit Testing
+//    public User(long l, String mail, String password1, String empOne, Role role) {
+//    }
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
