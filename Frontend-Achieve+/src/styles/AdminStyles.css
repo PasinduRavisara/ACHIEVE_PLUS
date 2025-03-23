@@ -1,0 +1,49 @@
+/* Admin pages shared styles */
+.admin-bg {
+  background-color: #e6f2ff; 
+  min-height: 100vh;
+  padding: 1.5rem;
+}
+
+/* Card styling for admin pages */
+.admin-bg .card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease-in-out;
+}
+
+.admin-bg .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+}
+
+.admin-bg h1,
+.admin-bg h2,
+.admin-bg h3,
+.admin-bg h4 {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+/* Table styling */
+.admin-bg .table {
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.admin-bg .table thead th {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #e9ecef;
+  color: #495057;
+  font-weight: 600;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .admin-bg {
+    padding: 1rem;
+  }
+} 
