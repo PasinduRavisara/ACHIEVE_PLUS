@@ -8,9 +8,10 @@ Achieve+ is a gamified task management platform developed as part of our second-
 - 🔐 Role-based login for Admins and Employees  
 - 📝 Task creation and assignment by Admins  
 - ✅ Employees can view and update the status of assigned tasks  
-- 📊 Team and Individual Progress Analysis dashboards  
-- 🏆 Earn points, unlock achievements, and claim rewards  
-- 📈 Leaderboard to track rankings based on performance  
+- 📊 Team and Individual Progress Analysis dashboards
+- 🏆 Rewards and Achievements page to track earned points and milestones  
+- 📈 Leaderboard to track rankings based on performance
+- 🛍️ Reward Store to choose and claim rewards  
 - 💧 Wellness reminders to prevent burnout
 
 ## 🛠 Tech Stack
