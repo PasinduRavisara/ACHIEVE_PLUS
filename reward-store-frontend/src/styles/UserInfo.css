@@ -1,0 +1,27 @@
+.user-info {
+  background-color: #a5b4fc;
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 30px;
+  width: 100%;
+  max-width: 350px;
+}
+
+.user-info h2 {
+  color: white;
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.points-display {
+  background-color: white;
+  border-radius: 20px;
+  padding: 10px 20px;
+  display: inline-block;
+}
+
+.points-value {
+  font-weight: bold;
+  font-size: 16px;
+}
