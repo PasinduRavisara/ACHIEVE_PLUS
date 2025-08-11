@@ -37,10 +37,6 @@ The system boosts **employee productivity** by turning task completion into an e
 
 ---
 
-## 📸 Screenshots
-*(Add screenshots of your UI here for better presentation — dashboard, task page, leaderboard, etc.)*
-
----
 
 ## 🚀 Installation & Setup
 
